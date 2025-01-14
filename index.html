@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +9,7 @@
     <script>
         const startButton = document.getElementById('start-btn');
         const statusMessage = document.getElementById('status');
-        const targetURL = "https://bbc.co.uk"; // Replace with your target URL
+        const targetURL = "https://studio.intheroom.global/preview/01HME9SDX183TWXP6BPGSDDTF1"; // Replace with your target URL
 
         startButton.addEventListener('click', async () => {
             try {
@@ -28,10 +27,10 @@
                 statusMessage.textContent = "Microphone access granted and fullscreen enabled.";
                 console.log('Audio stream:', stream); // Debugging
 
-                // Delay the redirect for a short period (e.g., 1 second) to ensure fullscreen works
+                // Delay the redirect for 3 seconds (3000ms)
                 setTimeout(() => {
                     window.location.href = targetURL;
-                }, 1000); // Delay for 1000ms (1 second)
+                }, 3000); // Increased delay to 3 seconds
             } catch (error) {
                 if (error.name === "NotAllowedError") {
                     statusMessage.textContent = "Error: Permission denied. Please allow microphone access.";
