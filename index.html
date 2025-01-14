@@ -9,7 +9,7 @@
     <script>
         const startButton = document.getElementById('start-btn');
         const statusMessage = document.getElementById('status');
-        const targetURL = "https://studio.intheroom.global/preview/01HME9SDX183TWXP6BPGSDDTF1"; // Replace with the URL you want to load
+        const targetURL = "https://example.com"; // Replace with your target URL
 
         startButton.addEventListener('click', async () => {
             try {
@@ -27,8 +27,10 @@
                 statusMessage.textContent = "Microphone access granted and fullscreen enabled.";
                 console.log('Audio stream:', stream); // Debugging
 
-                // Redirect to the target URL
-                window.location.href = targetURL;
+                // Delay the redirect for a short period (e.g., 1 second) to ensure fullscreen works
+                setTimeout(() => {
+                    window.location.href = targetURL;
+                }, 1000); // Delay for 1000ms (1 second)
             } catch (error) {
                 if (error.name === "NotAllowedError") {
                     statusMessage.textContent = "Error: Permission denied. Please allow microphone access.";
