@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Fullscreen and Microphone Access</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullscreen and Microphone in Iframe</title>
 </head>
 <body>
-    <button id="start-btn">Start Fullscreen and Mic</button>
+    <button id="start-btn">Start Fullscreen and Mic in Iframe</button>
     <p id="status"></p>
+    
     <div id="iframe-container" style="display: none;">
         <iframe id="target-iframe" src="https://studio.intheroom.global/preview/01HME9SDX183TWXP6BPGSDDTF1" style="width: 100%; height: 100%; border: none;"></iframe>
     </div>
+    
     <script>
         const startButton = document.getElementById('start-btn');
         const statusMessage = document.getElementById('status');
@@ -22,19 +26,15 @@
                     await document.documentElement.requestFullscreen();
                 }
 
-                // Request microphone access
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                statusMessage.textContent = "Microphone access granted and fullscreen enabled.";
-
                 // Show the iframe and attempt to request fullscreen for it
                 iframeContainer.style.display = 'block';
 
-                // Attempt to enter fullscreen for the iframe
+                // Delay to allow iframe to load properly before trying fullscreen
                 setTimeout(() => {
                     if (iframe.requestFullscreen) {
                         iframe.requestFullscreen();
                     }
-                }, 2000); // Wait for the iframe to load and then trigger fullscreen
+                }, 500); // Adjust the timeout as needed
             } catch (error) {
                 statusMessage.textContent = `Error: ${error.message}`;
             }
