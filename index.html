@@ -13,7 +13,7 @@
 
         startButton.addEventListener('click', async () => {
             try {
-                // Request fullscreen mode
+                // Request fullscreen mode for the current page
                 if (document.documentElement.requestFullscreen) {
                     await document.documentElement.requestFullscreen();
                 } else if (document.documentElement.webkitRequestFullscreen) { // Safari
@@ -25,12 +25,16 @@
                 // Request microphone access
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 statusMessage.textContent = "Microphone access granted and fullscreen enabled.";
-                console.log('Audio stream:', stream); // Debugging
 
-                // Delay the redirect for 3 seconds (3000ms)
+                // Open the target URL in a new window and attempt to force fullscreen there
                 setTimeout(() => {
-                    window.location.href = targetURL;
-                }, 3000); // Increased delay to 3 seconds
+                    const fullscreenWindow = window.open(targetURL, "_blank", "fullscreen=yes, width=100%, height=100%");
+                    
+                    // Try to enter fullscreen on the new window (this will depend on browser support)
+                    fullscreenWindow.document.documentElement.requestFullscreen().catch(err => {
+                        console.error("Failed to enter fullscreen on target page:", err);
+                    });
+                }, 2000); // Adjust the timeout to ensure fullscreen is triggered before opening the target page
             } catch (error) {
                 if (error.name === "NotAllowedError") {
                     statusMessage.textContent = "Error: Permission denied. Please allow microphone access.";
@@ -41,7 +45,6 @@
                 } else {
                     statusMessage.textContent = `Error: ${error.message}`;
                 }
-                console.error('Error accessing microphone or fullscreen:', error);
             }
         });
     </script>
