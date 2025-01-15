@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persistent Fullscreen</title>
+    <title>Persistent Fullscreen with Monitoring</title>
 </head>
 <body>
-    <h1>Persistent Fullscreen for Iframe</h1>
-    <p>This page ensures fullscreen mode is maintained, even when the headset is removed and put back on.</p>
+    <h1>Persistent Fullscreen for Meta Quest 3</h1>
+    <p>This page continuously ensures fullscreen mode remains active.</p>
     
-    <button id="load-iframe-btn">Load Iframe and Go Fullscreen</button>
+    <button id="load-iframe-btn">Load Iframe and Start Fullscreen</button>
     
     <!-- Iframe container -->
     <div id="iframe-container" style="display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0;">
@@ -36,45 +36,44 @@
                     await element.requestFullscreen();
                     fullscreenActive = true;
                     console.log('Fullscreen activated');
+                } else {
+                    console.warn('Fullscreen API not supported');
                 }
             } catch (error) {
                 console.error('Error activating fullscreen:', error);
             }
         }
 
-        // Function to check and re-enter fullscreen if needed
-        function ensureFullscreen() {
-            if (!document.fullscreenElement) {
-                console.log('Re-entering fullscreen...');
-                enterFullscreen(document.documentElement);
-            }
+        // Function to monitor and re-enter fullscreen if needed
+        function monitorFullscreen() {
+            setInterval(() => {
+                if (!document.fullscreenElement) {
+                    console.log('Fullscreen exited, attempting to re-enter...');
+                    enterFullscreen(document.documentElement);
+                }
+            }, 1000); // Check every second
         }
 
-        // Handle visibility change or focus loss
+        // Handle visibility change or focus return
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
-                ensureFullscreen();
+                console.log('Page visible, ensuring fullscreen...');
+                enterFullscreen(document.documentElement);
             }
         });
 
-        window.addEventListener('blur', ensureFullscreen);
-        window.addEventListener('focus', ensureFullscreen);
-
-        // Handle exiting fullscreen
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement && fullscreenActive) {
-                console.log('Fullscreen exited, re-entering...');
-                ensureFullscreen();
-            }
+        window.addEventListener('focus', () => {
+            console.log('Window focused, ensuring fullscreen...');
+            enterFullscreen(document.documentElement);
         });
 
-        // Event listener for the button
+        // Button click to load iframe and start fullscreen
         loadIframeButton.addEventListener('click', async () => {
-            // Show the iframe and request fullscreen
             iframeContainer.style.display = 'block';
             await enterFullscreen(document.documentElement);
+            monitorFullscreen();
 
-            // Ensure fullscreen for the iframe after it loads
+            // Ensure the iframe enters fullscreen after it loads
             iframe.onload = () => {
                 console.log('Iframe loaded, attempting fullscreen...');
                 if (iframe.requestFullscreen) {
